@@ -2184,11 +2184,11 @@ p > code {
     }.box-shadow-wrapper {
       box-shadow: none !important;
     }body {
-      cursor: url('/media/curs/default_normal.cur.cur'), default;
+      cursor: url('/media/curs/default_normal.cur'), default;
     }a {
-      cursor: url('/media/curs/default_link.cur.cur'), pointer !important;
+      cursor: url('/media/curs/default_link.cur'), pointer !important;
     }input, textarea, code {
-      cursor: url('/media/curs/default_texto.cur.cur'), text !important;
+      cursor: url('/media/curs/default_texto.cur'), text !important;
     }code > span.copy-code {
       cursor: pointer;
     }.post img {
