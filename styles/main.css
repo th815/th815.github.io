@@ -2184,15 +2184,15 @@ p > code {
     }.box-shadow-wrapper {
       box-shadow: none !important;
     }body {
-      cursor: default;
+      cursor: url('/media/curs/default_normal.cur.cur'), default;
     }a {
-      cursor: pointer;
+      cursor: url('/media/curs/default_link.cur.cur'), pointer !important;
     }input, textarea, code {
-      cursor: text;
+      cursor: url('/media/curs/default_texto.cur.cur'), text !important;
     }code > span.copy-code {
       cursor: pointer;
     }.post img {
-      cursor: zoom-in;
+      cursor: url('/media/curs/default_zoomout.cur.cur'), zoom-in !important;
     }.post img {
-      cursor: zoom-out;
+      cursor: url('/media/curs/default_zoomout.cur.cur'), zoom-out !important;
     }
