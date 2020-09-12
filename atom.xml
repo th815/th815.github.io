@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://th815.github.io</id>
     <title>田昊</title>
-    <updated>2020-09-12T09:08:38.479Z</updated>
+    <updated>2020-09-12T09:20:51.936Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://th815.github.io"/>
     <link rel="self" href="https://th815.github.io/atom.xml"/>
@@ -11,19 +11,19 @@
     <icon>https://th815.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 田昊</rights>
     <entry>
-        <title type="html"><![CDATA[⌚️2020-09-12]]></title>
+        <title type="html"><![CDATA[⌚️文字图片测试09-12]]></title>
         <id>https://th815.github.io/post/2020-09-12/</id>
         <link href="https://th815.github.io/post/2020-09-12/">
         </link>
         <updated>2020-09-12T08:09:15.000Z</updated>
-        <summary type="html"><![CDATA[<p>test 2020<br>
-💡</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>test 2020<br>
-💡</p>
-<!-- more -->
-<p><img src="https://th815.github.io/post-images/1599901643666.jpg" alt="" loading="lazy"><br>
-图片测试</p>
+        <content type="html"><![CDATA[<p>##test</p>
+<blockquote>
+<p>2020<br>
+💡test</p>
+</blockquote>
+<p>##图片测试<br>
+<img src="https://th815.github.io/post-images/1599902337333.jpg" alt="" loading="lazy"><br>
+这里应该是一张图片</p>
 ]]></content>
     </entry>
 </feed>
