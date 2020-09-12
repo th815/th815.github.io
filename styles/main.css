@@ -2192,7 +2192,7 @@ p > code {
     }code > span.copy-code {
       cursor: pointer;
     }.post img {
-      cursor: url('/media/curs/default_zoomout.cur.cur'), zoom-in !important;
+      cursor: url('/media/curs/default_zoomout.cur'), zoom-in !important;
     }.post img {
-      cursor: url('/media/curs/default_zoomout.cur.cur'), zoom-out !important;
+      cursor: url('/media/curs/default_zoomout.cur'), zoom-out !important;
     }
