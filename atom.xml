@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://th815.github.io</id>
     <title>田昊</title>
-    <updated>2020-09-13T12:37:03.962Z</updated>
+    <updated>2020-09-13T12:45:09.647Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://th815.github.io"/>
     <link rel="self" href="https://th815.github.io/atom.xml"/>
@@ -38,19 +38,43 @@ myArray.forEach(() =&gt; { }); // fat arrow syntax`</p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[⌚️文字图片测试09-12]]></title>
+        <title type="html"><![CDATA[⌚️文字图片测试]]></title>
         <id>https://th815.github.io/post/2020-09-12/</id>
         <link href="https://th815.github.io/post/2020-09-12/">
         </link>
         <updated>2020-09-12T08:09:15.000Z</updated>
-        <content type="html"><![CDATA[<p>##test</p>
+        <summary type="html"><![CDATA[<p>##文字测试</p>
 <blockquote>
 <p>2020<br>
 💡test</p>
 </blockquote>
 <p>##图片测试<br>
 <img src="https://th815.github.io/post-images/1599902337333.jpg" alt="" loading="lazy"><br>
-这里应该是一张图片</p>
+这里应该是一张图片<br>
+*@星号 *<br>
+** 双“星号”测试<br>
+测试</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>##文字测试</p>
+<blockquote>
+<p>2020<br>
+💡test</p>
+</blockquote>
+<p>##图片测试<br>
+<img src="https://th815.github.io/post-images/1599902337333.jpg" alt="" loading="lazy"><br>
+这里应该是一张图片<br>
+*@星号 *<br>
+** 双“星号”测试<br>
+测试</p>
+<!-- more -->
+<p>分隔符</p>
+<pre><code>波浪
+$$ 钱💰 $$
+$测试$
+
+- 列表
+- 测试1
+- ver</code></pre>
 ]]></content>
     </entry>
 </feed>
