@@ -9,7 +9,7 @@
 <meta name="description" content="记录成长点滴">
 <meta name="theme-color" content="#000">
 <title>高亮测试 | 田昊</title>
-<link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/favicon.ico?v=1600001500876">
+<link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/favicon.ico?v=1600003563737">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/media/css/gemini.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/media/fonts/font-awesome.css">
 <link
@@ -205,19 +205,19 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">2</span>
+        <span class="site-item-stat-count">3</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
     <div class="sidebar-item-box">
       <a href="">
-        <span class="site-item-stat-count">0</span>
+        <span class="site-item-stat-count">1</span>
         <span class="site-item-stat-name language" data-lan="category">分类</span>
       </a>
     </div>
     <div class="sidebar-item-box">
       <a href="/tags/">
-        <span class="site-item-stat-count">0</span>
+        <span class="site-item-stat-count">1</span>
         <span class="site-item-stat-name language" data-lan="tag">标签</span>
       </a>
     </div>
@@ -586,6 +586,10 @@ myArray.forEach(() =&gt; { }); // fat arrow syntax`</p>
   </div>
   <div class="nav">
     <div class="nav-prev">
+      
+        <i class="fa fa-chevron-left"></i>
+        <a class="nav-pc-next" title="一份简明的 Base64 原理解析" href="https://th815.github.io/post/base64/">一份简明的 Base64 原理解析</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="一份简明的 Base64 原理解析" href="https://th815.github.io/post/base64/">上一篇</a>
       
     </div>
     <div class="nav-next">
@@ -1113,6 +1117,119 @@ myArray.forEach(() =&gt; { }); // fat arrow syntax`</p>
     <div class="result" id="result">
       
       <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://th815.github.io/post/base64/"" data-c="
+          &lt;h2 id=&#34;1-base64-是什么&#34;&gt;1. Base64 是什么&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Base64 是一种基于 64 个可打印字符来表示二进制数据的表示方法。由于 2^6=64，所以每 6 个比特为一个单元，对应某个可打印字符。3 个字节有 24 个比特，对应于 4 个 Base64 单元，即 3 个字节可由 4 个可打印字符来表示。&lt;/p&gt;
+&lt;p&gt;——维基百科&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;它不是一种加解密技术，是一种简单的编解码技术。&lt;/p&gt;
+&lt;p&gt;Base64 常用于表示、传输、存储二进制数据，也可以用于将一些含有特殊字符的文本内容编码，以便传输。&lt;/p&gt;
+&lt;p&gt;比如：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;在电子邮件的传输中，Base64 可以用来将 binary 的字节序列，比如附件，编码成 ASCII 字节序列；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将一些体积不大的图片 Base64 编码后，直接内嵌到网页源码里；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将要传递给 HTTP 请求的参数做简单的转换，降低肉眼可读性；&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;注：用于 URL 的 Base64 非标准 Base64，是一种变种。&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;网友们在论坛等公开场合习惯将邮箱地址 Base64 后再发出来，防止被爬虫抓取后发送垃圾邮件。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;2-base64-编码原理&#34;&gt;2. Base64 编码原理&lt;/h2&gt;
+&lt;p&gt;标准 Base64 里的 64 个可打印字符是 &lt;code&gt;A-Za-z0-9+/&lt;/code&gt;，分别依次对应索引值 0-63。索引表如下：&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;/images/posts/java/base64-index.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;编码时，每 3 个字节一组，共 8bit*3=24bit，划分成 4 组，即每 6bit 代表一个编码后的索引值，划分如下图所示：&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;/images/posts/java/base64-split.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;这样可能不太直观，举个例子就容易理解了。比如我们对 &lt;code&gt;cat&lt;/code&gt; 进行编码：&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;/images/posts/java/base64-example.jpeg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;可以看到 &lt;code&gt;cat&lt;/code&gt; 编码后变成了 &lt;code&gt;Y2F0&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;如果待编码内容的字节数不是 3 的整数倍，那需要进行一些额外的处理。&lt;/p&gt;
+&lt;p&gt;如果最后剩下 1 个字节，那么将补 4 个 0 位，编码成 2 个 Base64 字符，然后补两个 &lt;code&gt;=&lt;/code&gt;：&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;4&#34;&gt;&lt;img src=&#34;/images/posts/java/base64-padding2.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;如果最后剩下 2 个字节，那么将补 2 个 0 位，编码成 3 个 Base64 字符，然后补一个 &lt;code&gt;=&lt;/code&gt;：&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;5&#34;&gt;&lt;img src=&#34;/images/posts/java/base64-padding1.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;3-实现一个简易的-base64-编码器&#34;&gt;3. 实现一个简易的 Base64 编码器&lt;/h2&gt;
+&lt;p&gt;讲完原理，我们就可以动手实现一个简易的标准 Base64 编码器了，以下是我参考 Java 8 的 java.util.Base64 乱写的一个 Java 版本，仅供参考，主要功能代码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class CustomBase64Encoder {
+
+    /**
+     * 索引表
+     */
+    private static final char[] sBase64 = {
+            &#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;, &#39;E&#39;, &#39;F&#39;, &#39;G&#39;, &#39;H&#39;,
+            &#39;I&#39;, &#39;J&#39;, &#39;K&#39;, &#39;L&#39;, &#39;M&#39;, &#39;N&#39;, &#39;O&#39;, &#39;P&#39;,
+            &#39;Q&#39;, &#39;R&#39;, &#39;S&#39;, &#39;T&#39;, &#39;U&#39;, &#39;V&#39;, &#39;W&#39;, &#39;X&#39;,
+            &#39;Y&#39;, &#39;Z&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;,
+            &#39;g&#39;, &#39;h&#39;, &#39;i&#39;, &#39;j&#39;, &#39;k&#39;, &#39;l&#39;, &#39;m&#39;, &#39;n&#39;,
+            &#39;o&#39;, &#39;p&#39;, &#39;q&#39;, &#39;r&#39;, &#39;s&#39;, &#39;t&#39;, &#39;u&#39;, &#39;v&#39;,
+            &#39;w&#39;, &#39;x&#39;, &#39;y&#39;, &#39;z&#39;, &#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;,
+            &#39;4&#39;, &#39;5&#39;, &#39;6&#39;, &#39;7&#39;, &#39;8&#39;, &#39;9&#39;, &#39;+&#39;, &#39;/&#39;
+    };
+
+    /**
+     * 将 byte[] 进行 Base64 编码并返回字符串
+     * @param src 原文
+     * @return 编码后的字符串
+     */
+    public static String encode(byte[] src) {
+        if (src == null) {
+            return null;
+        }
+
+        byte[] dst = new byte[(src.length + 2) / 3 * 4];
+
+        int index = 0;
+
+        // 每次将 3 个字节编码为 4 个字节
+        for (int i = 0; i &amp;lt; (src.length / 3 * 3); i += 3) {
+            int bits = (src[i] &amp;amp; 0xff) &amp;lt;&amp;lt; 16 | (src[i + 1] &amp;amp; 0xff) &amp;lt;&amp;lt; 8 | (src[i + 2] &amp;amp; 0xff);
+            dst[index++] = (byte) sBase64[(bits &amp;gt;&amp;gt;&amp;gt; 18) &amp;amp; 0x3f];
+            dst[index++] = (byte) sBase64[(bits &amp;gt;&amp;gt;&amp;gt; 12) &amp;amp; 0x3f];
+            dst[index++] = (byte) sBase64[(bits &amp;gt;&amp;gt;&amp;gt; 6) &amp;amp; 0x3f];
+            dst[index++] = (byte) sBase64[bits &amp;amp; 0x3f];
+        }
+
+        // 处理剩下的 1 个或 2 个字节
+        if (src.length % 3 == 1) {
+            int bits = (src[src.length - 1] &amp;amp; 0xff) &amp;lt;&amp;lt; 4;
+            dst[index++] = (byte) sBase64[(bits &amp;gt;&amp;gt;&amp;gt; 6) &amp;amp; 0x3f];
+            dst[index++] = (byte) sBase64[bits &amp;amp; 0x3f];
+            dst[index++] = &#39;=&#39;;
+            dst[index] = &#39;=&#39;;
+        } else if (src.length % 3 == 2) {
+            int bits = (src[src.length - 2] &amp;amp; 0xff) &amp;lt;&amp;lt; 10 | (src[src.length - 1] &amp;amp; 0xff) &amp;lt;&amp;lt; 2;
+            dst[index++] = (byte) sBase64[(bits &amp;gt;&amp;gt;&amp;gt; 12) &amp;amp; 0x3f];
+            dst[index++] = (byte) sBase64[(bits &amp;gt;&amp;gt;&amp;gt; 6) &amp;amp; 0x3f];
+            dst[index++] = (byte) sBase64[bits &amp;amp; 0x3f];
+            dst[index] = &#39;=&#39;;
+        }
+
+        return new String(dst);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这部分源码我也上传到 GitHub 仓库 &lt;a href=&#34;https://github.com/mzlogin/spring-practices&#34;&gt;https://github.com/mzlogin/spring-practices&lt;/a&gt; 的 base64test 工程里了。&lt;/p&gt;
+&lt;h2 id=&#34;4-其它知识点&#34;&gt;4. 其它知识点&lt;/h2&gt;
+&lt;h3 id=&#34;41-为什么有的编码结果带回车&#34;&gt;4.1 为什么有的编码结果带回车&lt;/h3&gt;
+&lt;p&gt;在电子邮件中，根据 RFC 822 规定，每 76 个字符需要加上一个回车换行，所以有些编码器实现，比如 sun.misc.BASE64Encoder.encode，是带回车的，还有 java.util.Base64.Encoder.RFC2045，是带回车换行的，每行 76 个字符。&lt;/p&gt;
+&lt;h3 id=&#34;42-base64-的变种&#34;&gt;4.2 Base64 的变种&lt;/h3&gt;
+&lt;p&gt;除了标准 Base64 之外，还有一些其它的 Base64 变种。&lt;/p&gt;
+&lt;p&gt;比如在 URL 的应用场景中，因为标准 Base64 索引表中的 &lt;code&gt;/&lt;/code&gt; 和 &lt;code&gt;+&lt;/code&gt; 会被 URLEncoder 转义成 &lt;code&gt;%XX&lt;/code&gt; 形式，但 &lt;code&gt;%&lt;/code&gt; 是 SQL 中的通配符，直接用于数据库操作会有问题。此时可以采用 URL Safe 的编码器，索引表中的 &lt;code&gt;/+&lt;/code&gt; 被换成 &lt;code&gt;-_&lt;/code&gt;，比如 java.util.Base64.Encoder.RFC4648_URLSAFE 就是这样的实现。&lt;/p&gt;
+&lt;h2 id=&#34;5-参考链接&#34;&gt;5. 参考链接&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://zh.wikipedia.org/zh-hans/Base64&#34;&gt;https://zh.wikipedia.org/zh-hans/Base64&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.liaoxuefeng.com/wiki/897692888725344/949441536192576&#34;&gt;https://www.liaoxuefeng.com/wiki/897692888725344/949441536192576&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+">一份简明的 Base64 原理解析</a>
+      </div>
+      
+      <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://th815.github.io/post/gao-liang-ce-shi/"" data-c="
           &lt;h1 id=&#34;高亮代码测试&#34;&gt;高亮代码测试&lt;/h1&gt;
 &lt;p&gt;以下高亮显示的代码块&lt;br&gt;
@@ -1155,7 +1272,7 @@ LinkedIn：@田昊&lt;br&gt;
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://th815.github.io/post/2020-09-12/"" data-c="
-          &lt;p&gt;#文字测试&lt;/p&gt;
+          &lt;h1 id=&#34;文字测试&#34;&gt;文字测试&lt;/h1&gt;
 &lt;blockquote&gt;
 &lt;p&gt;2020&lt;br&gt;
 💡test&lt;/p&gt;
@@ -1164,9 +1281,13 @@ LinkedIn：@田昊&lt;br&gt;
 &lt;img src=&#34;https://th815.github.io/post-images/1599902337333.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;br&gt;
 这里应该是一张图片&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;*星号 *&lt;/li&gt;
-&lt;li&gt;** 双“星号”测试&lt;br&gt;
-*1 星号测是 *&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;1星号&lt;br&gt;
+** 双“星号”测试&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;1星号测是&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 &lt;!-- more --&gt;
 &lt;p&gt;分隔符&lt;/p&gt;
@@ -1186,7 +1307,7 @@ declare magicNumber number;
 myArray.forEach(() =&amp;gt; { }); // fat arrow syntax`
 
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;#代码高亮&lt;/p&gt;
+&lt;h1 id=&#34;代码高亮&#34;&gt;代码高亮&lt;/h1&gt;
 &lt;pre&gt;&lt;code&gt;`class MyClass {
   public static myValue: string;
   constructor(init: string) {
@@ -1201,13 +1322,13 @@ module MyModule {
 }
 declare magicNumber number;
 myArray.forEach(() =&amp;gt; { }); // fat arrow syntax`
-`
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;#居中&lt;/p&gt;
+&lt;h1 id=&#34;居中&#34;&gt;居中&lt;/h1&gt;
 &lt;p class=&#39;katex-block&#39;&gt;&lt;span class=&#34;katex-display&#34;&gt;&lt;span class=&#34;katex&#34;&gt;&lt;span class=&#34;katex-mathml&#34;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi mathvariant=&#34;normal&#34;&gt;钱&lt;/mi&gt;&lt;mi mathvariant=&#34;normal&#34;&gt;💰&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&#34;application/x-tex&#34;&gt;钱💰 
 &lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&#34;katex-html&#34; aria-hidden=&#34;true&#34;&gt;&lt;span class=&#34;base&#34;&gt;&lt;span class=&#34;strut&#34; style=&#34;height:0em;vertical-align:0em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mord cjk_fallback&#34;&gt;钱&lt;/span&gt;&lt;span class=&#34;mord&#34;&gt;💰&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;katex&#34;&gt;&lt;span class=&#34;katex-mathml&#34;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi mathvariant=&#34;normal&#34;&gt;测&lt;/mi&gt;&lt;mi mathvariant=&#34;normal&#34;&gt;试&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&#34;application/x-tex&#34;&gt;测试&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&#34;katex-html&#34; aria-hidden=&#34;true&#34;&gt;&lt;span class=&#34;base&#34;&gt;&lt;span class=&#34;strut&#34; style=&#34;height:0em;vertical-align:0em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mord cjk_fallback&#34;&gt;测&lt;/span&gt;&lt;span class=&#34;mord cjk_fallback&#34;&gt;试&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;
-#列表测试&lt;/p&gt;
+&lt;p class=&#39;katex-block&#39;&gt;&lt;span class=&#34;katex-display&#34;&gt;&lt;span class=&#34;katex&#34;&gt;&lt;span class=&#34;katex-mathml&#34;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi mathvariant=&#34;normal&#34;&gt;测&lt;/mi&gt;&lt;mi mathvariant=&#34;normal&#34;&gt;试&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&#34;application/x-tex&#34;&gt;测试 
+&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&#34;katex-html&#34; aria-hidden=&#34;true&#34;&gt;&lt;span class=&#34;base&#34;&gt;&lt;span class=&#34;strut&#34; style=&#34;height:0em;vertical-align:0em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mord cjk_fallback&#34;&gt;测&lt;/span&gt;&lt;span class=&#34;mord cjk_fallback&#34;&gt;试&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;h1 id=&#34;列表测试&#34;&gt;列表测试&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;列表&lt;/li&gt;
 &lt;li&gt;测试1&lt;/li&gt;

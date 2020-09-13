@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://th815.github.io</id>
     <title>田昊</title>
-    <updated>2020-09-13T12:51:43.595Z</updated>
+    <updated>2020-09-13T13:26:06.276Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://th815.github.io"/>
     <link rel="self" href="https://th815.github.io/atom.xml"/>
@@ -10,6 +10,122 @@
     <logo>https://th815.github.io/images/avatar.png</logo>
     <icon>https://th815.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 田昊</rights>
+    <entry>
+        <title type="html"><![CDATA[一份简明的 Base64 原理解析]]></title>
+        <id>https://th815.github.io/post/base64/</id>
+        <link href="https://th815.github.io/post/base64/">
+        </link>
+        <updated>2020-09-13T13:05:40.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="1-base64-是什么">1. Base64 是什么</h2>
+<blockquote>
+<p>Base64 是一种基于 64 个可打印字符来表示二进制数据的表示方法。由于 2^6=64，所以每 6 个比特为一个单元，对应某个可打印字符。3 个字节有 24 个比特，对应于 4 个 Base64 单元，即 3 个字节可由 4 个可打印字符来表示。</p>
+<p>——维基百科</p>
+</blockquote>
+<p>它不是一种加解密技术，是一种简单的编解码技术。</p>
+<p>Base64 常用于表示、传输、存储二进制数据，也可以用于将一些含有特殊字符的文本内容编码，以便传输。</p>
+<p>比如：</p>
+<ol>
+<li>
+<p>在电子邮件的传输中，Base64 可以用来将 binary 的字节序列，比如附件，编码成 ASCII 字节序列；</p>
+</li>
+<li>
+<p>将一些体积不大的图片 Base64 编码后，直接内嵌到网页源码里；</p>
+</li>
+<li>
+<p>将要传递给 HTTP 请求的参数做简单的转换，降低肉眼可读性；</p>
+<p><em>注：用于 URL 的 Base64 非标准 Base64，是一种变种。</em></p>
+</li>
+<li>
+<p>网友们在论坛等公开场合习惯将邮箱地址 Base64 后再发出来，防止被爬虫抓取后发送垃圾邮件。</p>
+</li>
+</ol>
+<h2 id="2-base64-编码原理">2. Base64 编码原理</h2>
+<p>标准 Base64 里的 64 个可打印字符是 <code>A-Za-z0-9+/</code>，分别依次对应索引值 0-63。索引表如下：</p>
+<figure data-type="image" tabindex="1"><img src="/images/posts/java/base64-index.png" alt="" loading="lazy"></figure>
+<p>编码时，每 3 个字节一组，共 8bit*3=24bit，划分成 4 组，即每 6bit 代表一个编码后的索引值，划分如下图所示：</p>
+<figure data-type="image" tabindex="2"><img src="/images/posts/java/base64-split.png" alt="" loading="lazy"></figure>
+<p>这样可能不太直观，举个例子就容易理解了。比如我们对 <code>cat</code> 进行编码：</p>
+<figure data-type="image" tabindex="3"><img src="/images/posts/java/base64-example.jpeg" alt="" loading="lazy"></figure>
+<p>可以看到 <code>cat</code> 编码后变成了 <code>Y2F0</code>。</p>
+<p>如果待编码内容的字节数不是 3 的整数倍，那需要进行一些额外的处理。</p>
+<p>如果最后剩下 1 个字节，那么将补 4 个 0 位，编码成 2 个 Base64 字符，然后补两个 <code>=</code>：</p>
+<figure data-type="image" tabindex="4"><img src="/images/posts/java/base64-padding2.png" alt="" loading="lazy"></figure>
+<p>如果最后剩下 2 个字节，那么将补 2 个 0 位，编码成 3 个 Base64 字符，然后补一个 <code>=</code>：</p>
+<figure data-type="image" tabindex="5"><img src="/images/posts/java/base64-padding1.png" alt="" loading="lazy"></figure>
+<h2 id="3-实现一个简易的-base64-编码器">3. 实现一个简易的 Base64 编码器</h2>
+<p>讲完原理，我们就可以动手实现一个简易的标准 Base64 编码器了，以下是我参考 Java 8 的 java.util.Base64 乱写的一个 Java 版本，仅供参考，主要功能代码如下：</p>
+<pre><code class="language-java">public class CustomBase64Encoder {
+
+    /**
+     * 索引表
+     */
+    private static final char[] sBase64 = {
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+            'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+            'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+            'w', 'x', 'y', 'z', '0', '1', '2', '3',
+            '4', '5', '6', '7', '8', '9', '+', '/'
+    };
+
+    /**
+     * 将 byte[] 进行 Base64 编码并返回字符串
+     * @param src 原文
+     * @return 编码后的字符串
+     */
+    public static String encode(byte[] src) {
+        if (src == null) {
+            return null;
+        }
+
+        byte[] dst = new byte[(src.length + 2) / 3 * 4];
+
+        int index = 0;
+
+        // 每次将 3 个字节编码为 4 个字节
+        for (int i = 0; i &lt; (src.length / 3 * 3); i += 3) {
+            int bits = (src[i] &amp; 0xff) &lt;&lt; 16 | (src[i + 1] &amp; 0xff) &lt;&lt; 8 | (src[i + 2] &amp; 0xff);
+            dst[index++] = (byte) sBase64[(bits &gt;&gt;&gt; 18) &amp; 0x3f];
+            dst[index++] = (byte) sBase64[(bits &gt;&gt;&gt; 12) &amp; 0x3f];
+            dst[index++] = (byte) sBase64[(bits &gt;&gt;&gt; 6) &amp; 0x3f];
+            dst[index++] = (byte) sBase64[bits &amp; 0x3f];
+        }
+
+        // 处理剩下的 1 个或 2 个字节
+        if (src.length % 3 == 1) {
+            int bits = (src[src.length - 1] &amp; 0xff) &lt;&lt; 4;
+            dst[index++] = (byte) sBase64[(bits &gt;&gt;&gt; 6) &amp; 0x3f];
+            dst[index++] = (byte) sBase64[bits &amp; 0x3f];
+            dst[index++] = '=';
+            dst[index] = '=';
+        } else if (src.length % 3 == 2) {
+            int bits = (src[src.length - 2] &amp; 0xff) &lt;&lt; 10 | (src[src.length - 1] &amp; 0xff) &lt;&lt; 2;
+            dst[index++] = (byte) sBase64[(bits &gt;&gt;&gt; 12) &amp; 0x3f];
+            dst[index++] = (byte) sBase64[(bits &gt;&gt;&gt; 6) &amp; 0x3f];
+            dst[index++] = (byte) sBase64[bits &amp; 0x3f];
+            dst[index] = '=';
+        }
+
+        return new String(dst);
+    }
+}
+</code></pre>
+<p>这部分源码我也上传到 GitHub 仓库 <a href="https://github.com/mzlogin/spring-practices">https://github.com/mzlogin/spring-practices</a> 的 base64test 工程里了。</p>
+<h2 id="4-其它知识点">4. 其它知识点</h2>
+<h3 id="41-为什么有的编码结果带回车">4.1 为什么有的编码结果带回车</h3>
+<p>在电子邮件中，根据 RFC 822 规定，每 76 个字符需要加上一个回车换行，所以有些编码器实现，比如 sun.misc.BASE64Encoder.encode，是带回车的，还有 java.util.Base64.Encoder.RFC2045，是带回车换行的，每行 76 个字符。</p>
+<h3 id="42-base64-的变种">4.2 Base64 的变种</h3>
+<p>除了标准 Base64 之外，还有一些其它的 Base64 变种。</p>
+<p>比如在 URL 的应用场景中，因为标准 Base64 索引表中的 <code>/</code> 和 <code>+</code> 会被 URLEncoder 转义成 <code>%XX</code> 形式，但 <code>%</code> 是 SQL 中的通配符，直接用于数据库操作会有问题。此时可以采用 URL Safe 的编码器，索引表中的 <code>/+</code> 被换成 <code>-_</code>，比如 java.util.Base64.Encoder.RFC4648_URLSAFE 就是这样的实现。</p>
+<h2 id="5-参考链接">5. 参考链接</h2>
+<ul>
+<li><a href="https://zh.wikipedia.org/zh-hans/Base64">https://zh.wikipedia.org/zh-hans/Base64</a></li>
+<li><a href="https://www.liaoxuefeng.com/wiki/897692888725344/949441536192576">https://www.liaoxuefeng.com/wiki/897692888725344/949441536192576</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[高亮测试]]></title>
         <id>https://th815.github.io/post/gao-liang-ce-shi/</id>
@@ -43,7 +159,7 @@ myArray.forEach(() =&gt; { }); // fat arrow syntax`</p>
         <link href="https://th815.github.io/post/2020-09-12/">
         </link>
         <updated>2020-09-12T08:09:15.000Z</updated>
-        <summary type="html"><![CDATA[<p>#文字测试</p>
+        <summary type="html"><![CDATA[<h1 id="文字测试">文字测试</h1>
 <blockquote>
 <p>2020<br>
 💡test</p>
@@ -52,12 +168,16 @@ myArray.forEach(() =&gt; { }); // fat arrow syntax`</p>
 <img src="https://th815.github.io/post-images/1599902337333.jpg" alt="" loading="lazy"><br>
 这里应该是一张图片</p>
 <ul>
-<li>*星号 *</li>
-<li>** 双“星号”测试<br>
-*1 星号测是 *</li>
+<li>
+<p>1星号<br>
+** 双“星号”测试</p>
+</li>
+<li>
+<p>1星号测是</p>
+</li>
 </ul>
 ]]></summary>
-        <content type="html"><![CDATA[<p>#文字测试</p>
+        <content type="html"><![CDATA[<h1 id="文字测试">文字测试</h1>
 <blockquote>
 <p>2020<br>
 💡test</p>
@@ -66,9 +186,13 @@ myArray.forEach(() =&gt; { }); // fat arrow syntax`</p>
 <img src="https://th815.github.io/post-images/1599902337333.jpg" alt="" loading="lazy"><br>
 这里应该是一张图片</p>
 <ul>
-<li>*星号 *</li>
-<li>** 双“星号”测试<br>
-*1 星号测是 *</li>
+<li>
+<p>1星号<br>
+** 双“星号”测试</p>
+</li>
+<li>
+<p>1星号测是</p>
+</li>
 </ul>
 <!-- more -->
 <p>分隔符</p>
@@ -88,7 +212,7 @@ declare magicNumber number;
 myArray.forEach(() =&gt; { }); // fat arrow syntax`
 
 </code></pre>
-<p>#代码高亮</p>
+<h1 id="代码高亮">代码高亮</h1>
 <pre><code>`class MyClass {
   public static myValue: string;
   constructor(init: string) {
@@ -103,13 +227,13 @@ module MyModule {
 }
 declare magicNumber number;
 myArray.forEach(() =&gt; { }); // fat arrow syntax`
-`
 </code></pre>
-<p>#居中</p>
+<h1 id="居中">居中</h1>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">钱</mi><mi mathvariant="normal">💰</mi></mrow><annotation encoding="application/x-tex">钱💰 
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0em;vertical-align:0em;"></span><span class="mord cjk_fallback">钱</span><span class="mord">💰</span></span></span></span></span></p>
-<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">测</mi><mi mathvariant="normal">试</mi></mrow><annotation encoding="application/x-tex">测试</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0em;vertical-align:0em;"></span><span class="mord cjk_fallback">测</span><span class="mord cjk_fallback">试</span></span></span></span><br>
-#列表测试</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">测</mi><mi mathvariant="normal">试</mi></mrow><annotation encoding="application/x-tex">测试 
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0em;vertical-align:0em;"></span><span class="mord cjk_fallback">测</span><span class="mord cjk_fallback">试</span></span></span></span></span></p>
+<h1 id="列表测试">列表测试</h1>
 <ul>
 <li>列表</li>
 <li>测试1</li>
