@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://th815.github.io</id>
     <title>田昊</title>
-    <updated>2020-09-13T13:26:55.814Z</updated>
+    <updated>2020-09-13T13:28:46.047Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://th815.github.io"/>
     <link rel="self" href="https://th815.github.io/atom.xml"/>
@@ -112,7 +112,6 @@
     }
 }
 </code></pre>
-<p>这部分源码我也上传到 GitHub 仓库 <a href="https://github.com/mzlogin/spring-practices">https://github.com/mzlogin/spring-practices</a> 的 base64test 工程里了。</p>
 <h2 id="4-其它知识点">4. 其它知识点</h2>
 <h3 id="41-为什么有的编码结果带回车">4.1 为什么有的编码结果带回车</h3>
 <p>在电子邮件中，根据 RFC 822 规定，每 76 个字符需要加上一个回车换行，所以有些编码器实现，比如 sun.misc.BASE64Encoder.encode，是带回车的，还有 java.util.Base64.Encoder.RFC2045，是带回车换行的，每行 76 个字符。</p>
