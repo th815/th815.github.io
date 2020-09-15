@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://th815.github.io</id>
     <title>田昊</title>
-    <updated>2020-09-14T09:44:51.924Z</updated>
+    <updated>2020-09-15T03:44:49.838Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://th815.github.io"/>
     <link rel="self" href="https://th815.github.io/atom.xml"/>
@@ -10,6 +10,101 @@
     <logo>https://th815.github.io/images/avatar.png</logo>
     <icon>https://th815.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 田昊</rights>
+    <entry>
+        <title type="html"><![CDATA[Juniper SRX Junos升级]]></title>
+        <id>https://th815.github.io/post/juniper-srx-junos-sheng-ji/</id>
+        <link href="https://th815.github.io/post/juniper-srx-junos-sheng-ji/">
+        </link>
+        <updated>2020-09-15T03:44:21.000Z</updated>
+        <content type="html"><![CDATA[<p>在拿到设备后，初次使用输入用户名root，回车就直接进入了，然后cli进入&gt;模式；</p>
+<p>原来的软件版本是12.1X。。的要升级的文件为junos-srxsme-12.3X48-D101-domestic.tgz<br>
+做之前需要把ftp服务器搭好，并把物理机防火墙关掉，我是使用3cd做的；<br>
+[edit]<br>
+root# set interfaces ge-0/0/0 unit 0 family inet address 192.168.1.238/24</p>
+<p>[edit]</p>
+<p>root# set routing-options static route 0.0.0.0/0 next-hop 192.168.1.253</p>
+<p>[edit]</p>
+<p>root# commit<br>
+commit complete</p>
+<p>[edit]</p>
+<p>root# exit<br>
+Exiting configuration mode</p>
+<p>root&gt; ping 192.168.1.253<br>
+PING 192.168.1.253 (192.168.1.253): 56 data bytes<br>
+64 bytes from 192.168.1.253: icmp_seq=0 ttl=64 time=2.762 ms<br>
+64 bytes from 192.168.1.253: icmp_seq=1 ttl=64 time=2.678 ms<br>
+^C<br>
+--- 192.168.1.253 ping statistics ---<br>
+2 packets transmitted, 2 packets received, 0% packet loss<br>
+round-trip min/avg/max/stddev = 2.678/2.720/2.762/0.042 ms</p>
+<p>root&gt; ftp 192.168.1.253<br>
+Connected to 192.168.1.253.<br>
+220 3Com 3CDaemon FTP Server Version 2.0<br>
+Name (192.168.1.253:root): admin<br>
+331 User name ok, need password<br>
+Password:<br>
+230 User logged in<br>
+Remote system type is UNIX.<br>
+Using binary mode to transfer files.<br>
+ftp&gt; bin<br>
+200 Type set to I.<br>
+ftp&gt; lcd /var/tmp<br>
+Local directory now /cf/var/tmp<br>
+ftp&gt; get junos-srxsme-12.3X48-D101-domestic.tgz<br>
+local: junos-srxsme-12.3X48-D101-domestic.tgz remote: junos-srxsme-12.3X48-D101-domestic.tgz<br>
+200 PORT command successful.<br>
+150 File status OK ; about to open data connection<br>
+100% |**************************************************| 176 MB 00:00 ETA<br>
+226 Closing data connection; File transfer successful.<br>
+184670919 bytes received in 73.91 seconds (2.38 MB/s)<br>
+ftp&gt; !ls<br>
+cleanup-pkgs.log krt_gencfg_filter.txt<br>
+eedebug_bin_file pics<br>
+gksdchk.log policy_status<br>
+gres-tp rtsdb<br>
+idp_license_info sec-download<br>
+install spu_kmd_init<br>
+junos-srxsme-12.3X48-D101-domestic.tgz vi.recover<br>
+kmdchk.log vpn_tunnel_orig.id<br>
+ftp&gt; !ls -l<br>
+total 360884<br>
+-rw-r--r-- 1 root wheel 3871 Jul 27 14:35 cleanup-pkgs.log<br>
+-rw-r--r-- 1 root wheel 0 Jul 27 14:34 eedebug_bin_file<br>
+-rw-r--r-- 1 root wheel 34 Jul 27 14:34 gksdchk.log<br>
+drwxr-xr-x 2 root wheel 512 Oct 21 2015 gres-tp<br>
+-rw-r--r-- 1 root wheel 4 Jul 27 14:36 idp_license_info<br>
+drwxrwxrwx 2 root wheel 512 Oct 21 2015 install<br>
+-rw-r--r-- 1 root wheel 184670919 Jul 27 07:42 junos-srxsme-12.3X48-D101-domestic.tgz<br>
+-rw-r--r-- 1 root wheel 33 Jul 27 14:40 kmdchk.log<br>
+-rw-r--r-- 1 root wheel 155 Jul 27 14:36 krt_gencfg_filter.txt<br>
+drwxrwxrwx 2 root wheel 512 Oct 21 2015 pics<br>
+-rw-r--r-- 1 root wheel 30 Jul 27 14:40 policy_status<br>
+drwxr-xr-x 2 root wheel 512 Oct 21 2015 rtsdb<br>
+drwxr-xr-x 3 root wheel 512 Oct 21 2015 sec-download<br>
+-rw-r--r-- 1 root wheel 0 Oct 21 2015 spu_kmd_init<br>
+drwxrwxrwt 2 root wheel 512 Oct 21 2015 vi.recover<br>
+-rw-r--r-- 1 root wheel 0 Jul 27 14:40 vpn_tunnel_orig.id<br>
+ftp&gt; bye<br>
+221 Service closing control connection</p>
+<p>root&gt; request system software add no-copy /var/tmp/junos-srxsme-12.3X48-D101-domestic.tgz no-validate reboot</p>
+<p>Formatting alternate root (/dev/da0s2a)...<br>
+/dev/da0s2a: 627.4MB (1284940 sectors) block size 16384, fragment size 2048<br>
+using 4 cylinder groups of 156.86MB, 10039 blks, 20096 inodes.<br>
+super-block backups (for fsck -b #) at:<br>
+32, 321280, 642528, 963776<br>
+Extracting /var/tmp/junos-srxsme-12.3X48-D101-domestic.tgz ...<br>
+Installing package '/altroot/cf/packages/install-tmp/junos-12.3X48-D101-domestic' ...<br>
+Verified junos-boot-srxsme-12.3X48-D101.tgz signed by PackageProductionSHA1RSA_2020<br>
+Verified junos-srxsme-12.3X48-D101-domestic signed by PackageProductionSHA1RSA_2020<br>
+JUNOS 12.3X48-D101 will become active at next reboot<br>
+Saving state for rollback ...<br>
+Rebooting ...<br>
+shutdown: [pid 2463]<br>
+Shutdown NOW!</p>
+<p>*** FINAL System shutdown message from root@ ***<br>
+至此，升级完成，可以在&gt;下show version查看版本</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Docker 和 Kubernetes 从听过到略懂：给程序员的旋风教程]]></title>
         <id>https://th815.github.io/post/docker-he-kubernetes-cong-ting-guo-dao-lue-dong-gei-cheng-xu-yuan-de-xuan-feng-jiao-cheng/</id>

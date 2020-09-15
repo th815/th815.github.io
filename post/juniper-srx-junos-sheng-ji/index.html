@@ -8,7 +8,7 @@
 <meta name="keywords" content="田昊的个人博客">
 <meta name="description" content="记录成长点滴">
 <meta name="theme-color" content="#000">
-<title>田昊</title>
+<title>Juniper SRX Junos升级 | 田昊</title>
 <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/favicon.ico?v=1600141481463">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/media/css/gemini.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/media/fonts/font-awesome.css">
@@ -41,6 +41,8 @@
 
 
 
+  <meta name="description" content="Juniper SRX Junos升级" />
+  <meta name="keywords" content="" />
 </head>
 
 <body>
@@ -76,7 +78,7 @@
             
               
             
-            <li class="nav-item nav-item-active">
+            <li class="nav-item ">
               
               
                 <a href="/" target="_self">
@@ -175,8 +177,23 @@
     <div
       class="section-layout gemini ">
       <div class="section-layout-wrapper">
-        <div id="sidebarMeta" class="sidebar">
-    
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/images/avatar.png"/>
@@ -226,27 +243,92 @@
 
 
 </div>
+          
+        
+      </div>
+    </div>
+  
 </div>
 <script>
-  let sidebarMeta = document.querySelector('#sidebarMeta');
-  let scheme = 'gemini';
-  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
-  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
-    document.addEventListener('scroll', function(e) {
-      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
-        sidebarWrapper.classList.add('home-sidebar-fixed')
-      } else {
-        sidebarWrapper.classList.remove('home-sidebar-fixed')
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    window.Velocity(hideElement, 'stop');
+    window.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        window.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
       }
-    });
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
   }
-  </script>
-        <div class="section-box gemini">
-          <section class="section  posts-expand slide-down-in">
-            
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <section class="post-header">
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <section class="post-header">
   <h1 class="post-title">
     <a class="post-title-link" href="https://th815.github.io/post/juniper-srx-junos-sheng-ji/">
       Juniper SRX Junos升级
@@ -273,293 +355,181 @@
     
   </div>
 </section>
-      <div class="post-body">
-        
-        
-          
-            <!-- 没有手动摘要切开启了自动摘要,则根据配置筛除摘要内容 -->
-            
-            
-              
-              
-              
-            
-              
-              
-              
-            
-              
-              
-              
-            
-            
-              <p><p>在拿到设备后，初次使用输入用户名root，回车就直接进入了，然后cli进入&gt;模式；</p>
+            <div class="post-body next-md-body" id="post_body">
+              <p>在拿到设备后，初次使用输入用户名root，回车就直接进入了，然后cli进入&gt;模式；</p>
 <p>原来的软件版本是12.1X。。的要升级的文件为junos-srxsme-12.3X48-D101-domestic.tgz<br>
 做之前需要把ftp服务器搭好，并把物理机防火墙关掉，我是使用3cd做的；<br>
+[edit]<br>
+root# set interfaces ge-0/0/0 unit 0 family inet address 192.168.1.238/24</p>
+<p>[edit]</p>
+<p>root# set routing-options static route 0.0.0.0/0 next-hop 192.168.1.253</p>
+<p>[edit]</p>
+<p>root# commit<br>
+commit complete</p>
+<p>[edit]</p>
+<p>root# exit<br>
+Exiting configuration mode</p>
+<p>root&gt; ping 192.168.1.253<br>
+PING 192.168.1.253 (192.168.1.253): 56 data bytes<br>
+64 bytes from 192.168.1.253: icmp_seq=0 ttl=64 time=2.762 ms<br>
+64 bytes from 192.168.1.253: icmp_seq=1 ttl=64 time=2.678 ms<br>
+^C<br>
+--- 192.168.1.253 ping statistics ---<br>
+2 packets transmitted, 2 packets received, 0% packet loss<br>
+round-trip min/avg/max/stddev = 2.678/2.720/2.762/0.042 ms</p>
+<p>root&gt; ftp 192.168.1.253<br>
+Connected to 192.168.1.253.<br>
+220 3Com 3CDaemon FTP Server Version 2.0<br>
+Name (192.168.1.253:root): admin<br>
+331 User name ok, need password<br>
+Password:<br>
+230 User logged in<br>
+Remote system type is UNIX.<br>
+Using binary mode to transfer files.<br>
+ftp&gt; bin<br>
+200 Type set to I.<br>
+ftp&gt; lcd /var/tmp<br>
+Local directory now /cf/var/tmp<br>
+ftp&gt; get junos-srxsme-12.3X48-D101-domestic.tgz<br>
+local: junos-srxsme-12.3X48-D101-domestic.tgz remote: junos-srxsme-12.3X48-D101-domestic.tgz<br>
+200 PORT command successful.<br>
+150 File status OK ; about to open data connection<br>
+100% |**************************************************| 176 MB 00:00 ETA<br>
+226 Closing data connection; File transfer successful.<br>
+184670919 bytes received in 73.91 seconds (2.38 MB/s)<br>
+ftp&gt; !ls<br>
+cleanup-pkgs.log krt_gencfg_filter.txt<br>
+eedebug_bin_file pics<br>
+gksdchk.log policy_status<br>
+gres-tp rtsdb<br>
+idp_license_info sec-download<br>
+install spu_kmd_init<br>
+junos-srxsme-12.3X48-D101-domestic.tgz vi.recover<br>
+kmdchk.log vpn_tunnel_orig.id<br>
+ftp&gt; !ls -l<br>
+total 360884<br>
+-rw-r--r-- 1 root wheel 3871 Jul 27 14:35 cleanup-pkgs.log<br>
+-rw-r--r-- 1 root wheel 0 Jul 27 14:34 eedebug_bin_file<br>
+-rw-r--r-- 1 root wheel 34 Jul 27 14:34 gksdchk.log<br>
+drwxr-xr-x 2 root wheel 512 Oct 21 2015 gres-tp<br>
+-rw-r--r-- 1 root wheel 4 Jul 27 14:36 idp_license_info<br>
+drwxrwxrwx 2 root wheel 512 Oct 21 2015 install<br>
+-rw-r--r-- 1 root wheel 184670919 Jul 27 07:42 junos-srxsme-12.3X48-D101-domestic.tgz<br>
+-rw-r--r-- 1 root wheel 33 Jul 27 14:40 kmdchk.log<br>
+-rw-r--r-- 1 root wheel 155 Jul 27 14:36 krt_gencfg_filter.txt<br>
+drwxrwxrwx 2 root wheel 512 Oct 21 2015 pics<br>
+-rw-r--r-- 1 root wheel 30 Jul 27 14:40 policy_status<br>
+drwxr-xr-x 2 root wheel 512 Oct 21 2015 rtsdb<br>
+drwxr-xr-x 3 root wheel 512 Oct 21 2015 sec-download<br>
+-rw-r--r-- 1 root wheel 0 Oct 21 2015 spu_kmd_init<br>
+drwxrwxrwt 2 root wheel 512 Oct 21 2015 vi.recover<br>
+-rw-r--r-- 1 root wheel 0 Jul 27 14:40 vpn_tunnel_orig.id<br>
+ftp&gt; bye<br>
+221 Service closing control connection</p>
+<p>root&gt; request system software add no-copy /var/tmp/junos-srxsme-12.3X48-D101-domestic.tgz no-validate reboot</p>
+<p>Formatting alternate root (/dev/da0s2a)...<br>
+/dev/da0s2a: 627.4MB (1284940 sectors) block size 16384, fragment size 2048<br>
+using 4 cylinder groups of 156.86MB, 10039 blks, 20096 inodes.<br>
+super-block backups (for fsck -b #) at:<br>
+32, 321280, 642528, 963776<br>
+Extracting /var/tmp/junos-srxsme-12.3X48-D101-domestic.tgz ...<br>
+Installing package '/altroot/cf/packages/install-tmp/junos-12.3X48-D101-domestic' ...<br>
+Verified junos-boot-srxsme-12.3X48-D101.tgz signed by PackageProductionSHA1RSA_2020<br>
+Verified junos-srxsme-12.3X48-D101-domestic signed by PackageProductionSHA1RSA_2020<br>
+JUNOS 12.3X48-D101 will become active at next reboot<br>
+Saving state for rollback ...<br>
+Rebooting ...<br>
+shutdown: [pid 2463]<br>
+Shutdown NOW!</p>
+<p>*** FINAL System shutdown message from root@ ***<br>
+至此，升级完成，可以在&gt;下show version查看版本</p>
 
-                
-              <p>
-            
-          
-        
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="https://th815.github.io/post/juniper-srx-junos-sheng-ji/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
-        
-      </div>
-      
-    </div>
-  </article>
-
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <section class="post-header">
-  <h1 class="post-title">
-    <a class="post-title-link" href="https://th815.github.io/post/docker-he-kubernetes-cong-ting-guo-dao-lue-dong-gei-cheng-xu-yuan-de-xuan-feng-jiao-cheng/">
-      Docker 和 Kubernetes 从听过到略懂：给程序员的旋风教程
-    </a>
-  </h1>
-  <div class="post-meta">
-    
-    <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2020-09-14 16:56:39">2020-09-14</span>
-      <span class="post-meta-divider pc-show">|</span>
-    </span>
-    
-    <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">分类于</span>
-      
-      
-      <a href="https://th815.github.io/tag/YZglN-P1i/">
-        <span>Linux</span>
-      </a>、
-      
-      
-      
-      <a href="https://th815.github.io/tag/rgW643LeNv/">
-        <span>docker</span>
-      </a>、
-      
-      
-      
-      <a href="https://th815.github.io/tag/kJ8eboB6BS/">
-        <span>Kubernetes</span>
-      </a>
-      
-      
-    </span>
-    <span class="post-meta-divider">|</span>
-    
-    <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span>17<span class="language" data-lan="minute">分钟</span></span>
-    </span>
-    <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-      <i class="fa fa-file-word-o"></i>
-      <span>3928<span class="pc-show language" data-lan="words">字数</span></span>
-    </span>
-    
-  </div>
-</section>
-      <div class="post-body">
-        
-        
-          
-            <!-- 没有手动摘要切开启了自动摘要,则根据配置筛除摘要内容 -->
+            </div>
             
             
-              
-              
-              
-            
-              
-              
-              
-            
-              
-              
-              
-            
-            
-              <p><!-- more -->
-<p>早在 Docker 正式发布几个月的时候，<a href="https://www.leancloud.cn/">LeanCloud</a> 就开始在生产环境大规模使用 Docker，在过去几年里 Docker 的技术栈支撑了我们主要的后端架构。这是一篇写给程序员的 Docker 和 Kubernetes 教程，目的是让熟悉技术的读者在尽可能短的时间内对 Docker 和 Kubernetes 有基本的了解，并通过实际部署、升级、回滚一个服务体验容器化生产环境的原理和好处。本文假设读者都是开发者，并熟悉 Mac/Linux 环境，所以就不介绍基础的技术概念了。命令行环境以 Mac 示例，在 Linux 下只要根据自己使用的发行版和包管理工具做调整即可。</p>
-<h1 id="docker-速成">Docker 速成</h1>
-
-                
-              <p>
-            
-          
-        
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="https://th815.github.io/post/docker-he-kubernetes-cong-ting-guo-dao-lue-dong-gei-cheng-xu-yuan-de-xuan-feng-jiao-cheng/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
-        
-      </div>
-      
-    </div>
-  </article>
-
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <section class="post-header">
-  <h1 class="post-title">
-    <a class="post-title-link" href="https://th815.github.io/post/base64/">
-      一份简明的 Base64 原理解析
-    </a>
-  </h1>
-  <div class="post-meta">
-    
-    <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2020-09-13 21:05:40">2020-09-13</span>
-      <span class="post-meta-divider pc-show">|</span>
-    </span>
-    
-    <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">分类于</span>
-      
-      
-      <a href="https://th815.github.io/tag/yxPcl1XQq/">
-        <span>Base64</span>
-      </a>
-      
-      
-    </span>
-    <span class="post-meta-divider">|</span>
-    
-    <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span>5<span class="language" data-lan="minute">分钟</span></span>
-    </span>
-    <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-      <i class="fa fa-file-word-o"></i>
-      <span>1107<span class="pc-show language" data-lan="words">字数</span></span>
-    </span>
-    
-  </div>
-</section>
-      <div class="post-body">
-        
-        
-          
-            <!-- 没有手动摘要切开启了自动摘要,则根据配置筛除摘要内容 -->
-            
-            
-              
-              
-              
-            
-              
-              
-              
-            
-              
-              
-              
-            
-            
-              <p><h2 id="1-base64-是什么">1. Base64 是什么</h2>
-<blockquote>
-<p>Base64 是一种基于 64 个可打印字符来表示二进制数据的表示方法。由于 2^6=64，所以每 6 个比特为一个单元，对应某个可打印字符。3 个字节有 24 个比特，对应于 4 个 Base64 单元，即 3 个字节可由 4 个可打印字符来表示。</p>
-
-                
-              <p>
-            
-          
-        
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="https://th815.github.io/post/base64/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
-        
-      </div>
-      
-    </div>
-  </article>
-
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <section class="post-header">
-  <h1 class="post-title">
-    <a class="post-title-link" href="https://th815.github.io/post/2020-09-12/">
-      ⌚️文字图片测试
-    </a>
-  </h1>
-  <div class="post-meta">
-    
-    <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2020-09-12 16:09:15">2020-09-12</span>
-      <span class="post-meta-divider pc-show">|</span>
-    </span>
-    
-    <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span>2<span class="language" data-lan="minute">分钟</span></span>
-    </span>
-    <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-      <i class="fa fa-file-word-o"></i>
-      <span>346<span class="pc-show language" data-lan="words">字数</span></span>
-    </span>
-    
-  </div>
-</section>
-      <div class="post-body">
-        
-        
-          
-            <p>👏  欢迎来到<strong>田昊</strong>的个人小站 ！<br>
-✍️  <strong>tianhao.tech</strong> 一个静态页面的博客，我用它来记录生活、心情、知识、笔记、创意... ...</p>
-
-          
-        
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="https://th815.github.io/post/2020-09-12/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
-        
-      </div>
-      
-    </div>
-  </article>
-  
-            
-            
-<div class="page bg-color">
-  <ul class="pagination-ul">
-    
-    
-      
-        <li class="pagination-li pagination-active">
-            <a href="/page/../">
-              1
-            </a>
-        </li>
-      
-    
-    
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      田昊
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="https://th815.github.io/post/juniper-srx-junos-sheng-ji/" title="Juniper SRX Junos升级">https://th815.github.io/post/juniper-srx-junos-sheng-ji/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
   </ul>
+  <div class="tags">
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="Docker 和 Kubernetes 从听过到略懂：给程序员的旋风教程" href="https://th815.github.io/post/docker-he-kubernetes-cong-ting-guo-dao-lue-dong-gei-cheng-xu-yuan-de-xuan-feng-jiao-cheng/">Docker 和 Kubernetes 从听过到略懂：给程序员的旋风教程</a>
+        <a class="nav-mobile-next" title="Docker 和 Kubernetes 从听过到略懂：给程序员的旋风教程" href="https://th815.github.io/post/docker-he-kubernetes-cong-ting-guo-dao-lue-dong-gei-cheng-xu-yuan-de-xuan-feng-jiao-cheng/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
+      
+    </div>
+  </div>
 </div>
-          </section>
+            
+            
+  <script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<div id="vcomments" style="padding: 10px 0px 0px 0px"></div>
+
+<style>
+  .v .veditor {
+    min-height: 10rem;
+    background-image: url('https://upimage.alexhchu.com/2020/04/21/47eda59424daa.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-color: rgba(255, 255, 255, 0);
+    resize: none;
+  }
+
+  .v .vwrap {
+    border: 1px solid #000 !important;
+  }
+
+  .v .vbtn {
+    padding: .4rem 1.2rem !important;
+    border-color: #fff !important;
+    background-color: #49b1f5 !important;
+    color: #fff !important;
+    font-size: .7rem !important;
+  }
+
+  .v .vcards .vcard .vh .vmeta .vat {
+    padding: 0 .8rem !important;
+    border: 1px solid #00c4b6 !important;
+    border-radius: 5px !important;
+    color: #00c4b6 !important;
+  }
+</style>
+<script>
+  new Valine({
+    el: '#vcomments',
+    appId: 'kIz5UYlX7kKJ7GdTEYQkRSmb-gzGzoHsz',
+    appKey: 'yaBgHHEKPvFnBjdvEVDQwAKg',
+    avatar: 'wavatar',
+    placeholder: '',
+    pageSize: '',
+    lang: 'zh-cn',
+    enableQQ: 'true' === 'false',
+    visitor: 'true' === 'false',
+    highlight: 'true' === 'true',
+    avatarForce: 'true' === 'false',
+  });
+</script>
+
+          </div>
         </div>
       </div>
     </div>
@@ -788,6 +758,223 @@
     }
   })
 </script>
+    <div class="reward-mask" style="display: none;">
+  <div class="reward-relative">
+    <span class="close" aria-hidden="true">x</span>
+    <div class="reward-body">
+      <h2>感谢您的支持，我会继续努力的!</h2>
+      <div class="reward-img-box">
+        <div style="position: relative; width: 140px; height: 140px;">
+          
+          
+          
+        </div>
+      </div>
+      <p class="reward-word">扫码打赏，你说多少就多少</p>
+      <p class="reward-tip">打开微信扫一扫，即可进行扫码打赏哦</p>
+    </div>
+    <div class="bottom">
+      
+      
+    </div>
+  </div>
+</div>
+<style>
+  .reward-mask {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #00000054;
+  }
+
+  .reward-relative {
+    position: relative;
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #fff;
+    top: 50%;
+    margin-top: -205px;
+  }
+
+  .reward-relative .close {
+    position: absolute;
+    right: 10px;
+    font-weight: normal;
+    font-size: 16px;
+    color: #929292;
+  }
+
+  .reward-body {
+    padding: 40px 20px 20px;
+  }
+
+  .bottom {
+    display: flex;
+  }
+
+  .reward-btn {
+    text-align: center;
+  }
+
+  .reward-btn-text {
+    display: inline-block;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    background-color: #ff9734;
+    color: #FFF;
+    margin-top: 20px;
+  }
+
+  .pay-text {
+    margin-top: 10px;
+    padding: 10px;
+    flex: 1;
+    transition: all .2s linear;
+  }
+
+  .pay-text:hover {
+    background-color: #a5a5a536;
+  }
+
+  .reward-body h2 {
+    padding-top: 10px;
+    text-align: center;
+    color: #a3a3a3;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 0 20px;
+  }
+
+  .reward-body h2:after,
+  .reward-body h2:before {
+    font-family: Arial, Helvetica, sans-serif;
+    background: 0 0;
+    width: 0;
+    height: 0;
+    font-style: normal;
+    color: #eee;
+    font-size: 80px;
+    position: absolute;
+    top: 20px;
+  }
+
+  .reward-body h2:before {
+    content: '\201c';
+    left: 50px;
+  }
+
+  .reward-body h2:after {
+    content: '\201d';
+    right: 80px;
+  }
+
+  .reward-img-box {
+    display: inline-block;
+    padding: 10px;
+    border: 6px solid #ea5f00;
+    margin: 0 auto;
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .reward-img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .reward-relative {
+      height: 100%;
+      top: 0px;
+      margin-top: 0;
+      width: auto;
+    }
+
+    .reward-relative .bottom {
+      flex-direction: column;
+    }
+
+    .reward-relative .pay-text {
+      width: 80%;
+      margin: 5px auto;
+      border: 1px solid silver;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .reward-body h2:after {
+      right: 40px;
+    }
+
+    .reward-body h2:after,
+    .reward-body h2:before {
+      font-size: 60px;
+    }
+
+    .reward-body h2:before {
+      left: 20px;
+    }
+  }
+</style>
+<script>
+  !function () {
+    var mask = document.querySelector('.reward-mask');
+    let close = document.querySelector('.reward-relative .close');
+    let rewardBtn = document.querySelector('.reward-btn');
+
+    let zfb = document.querySelector('#zfb'),
+      wx = document.querySelector('#wx'),
+      zfbBtn = document.querySelector('#zfbBtn'),
+      wxBtn = document.querySelector('#wxBtn');
+
+    if (zfbBtn && wxBtn) {
+      zfbBtn.addEventListener('click', () => {
+        window.Velocity(zfb, 'transition.slideLeftIn', {
+          duration: 400
+        });
+        window.Velocity(wx, 'transition.slideRightOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+
+      wxBtn.addEventListener('click', () => {
+        window.Velocity(wx, 'transition.slideRightIn', {
+          duration: 400
+        });
+        window.Velocity(zfb, 'transition.slideLeftOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+    }
+
+    rewardBtn.addEventListener('click', (e) => {
+      window.Velocity(mask, 'transition.slideDownIn', {
+        duration: 400
+      })
+    });
+
+    close.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.Velocity(mask, 'transition.slideUpOut', {
+        duration: 400
+      })
+    })
+  }()
+</script>
+
   </div>
 </body>
 
@@ -1667,6 +1854,5 @@ myArray.forEach(() =&amp;gt; { }); // fat arrow syntax`
   // Using config rendering effect at 'element'.
   const cn = new CanvasNest(document.querySelector('.snow-container'), config);
   </script>
-
 
 </html>

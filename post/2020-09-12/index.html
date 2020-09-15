@@ -9,7 +9,7 @@
 <meta name="description" content="记录成长点滴">
 <meta name="theme-color" content="#000">
 <title>⌚️文字图片测试 | 田昊</title>
-<link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/favicon.ico?v=1600076689689">
+<link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/favicon.ico?v=1600141481463">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/media/css/gemini.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io@master/media/fonts/font-awesome.css">
 <link
@@ -205,7 +205,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">3</span>
+        <span class="site-item-stat-count">4</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -1165,6 +1165,98 @@ myArray.forEach(() =&gt; { }); // fat arrow syntax`
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://th815.github.io/post/juniper-srx-junos-sheng-ji/"" data-c="
+          &lt;p&gt;在拿到设备后，初次使用输入用户名root，回车就直接进入了，然后cli进入&amp;gt;模式；&lt;/p&gt;
+&lt;p&gt;原来的软件版本是12.1X。。的要升级的文件为junos-srxsme-12.3X48-D101-domestic.tgz&lt;br&gt;
+做之前需要把ftp服务器搭好，并把物理机防火墙关掉，我是使用3cd做的；&lt;br&gt;
+[edit]&lt;br&gt;
+root# set interfaces ge-0/0/0 unit 0 family inet address 192.168.1.238/24&lt;/p&gt;
+&lt;p&gt;[edit]&lt;/p&gt;
+&lt;p&gt;root# set routing-options static route 0.0.0.0/0 next-hop 192.168.1.253&lt;/p&gt;
+&lt;p&gt;[edit]&lt;/p&gt;
+&lt;p&gt;root# commit&lt;br&gt;
+commit complete&lt;/p&gt;
+&lt;p&gt;[edit]&lt;/p&gt;
+&lt;p&gt;root# exit&lt;br&gt;
+Exiting configuration mode&lt;/p&gt;
+&lt;p&gt;root&amp;gt; ping 192.168.1.253&lt;br&gt;
+PING 192.168.1.253 (192.168.1.253): 56 data bytes&lt;br&gt;
+64 bytes from 192.168.1.253: icmp_seq=0 ttl=64 time=2.762 ms&lt;br&gt;
+64 bytes from 192.168.1.253: icmp_seq=1 ttl=64 time=2.678 ms&lt;br&gt;
+^C&lt;br&gt;
+--- 192.168.1.253 ping statistics ---&lt;br&gt;
+2 packets transmitted, 2 packets received, 0% packet loss&lt;br&gt;
+round-trip min/avg/max/stddev = 2.678/2.720/2.762/0.042 ms&lt;/p&gt;
+&lt;p&gt;root&amp;gt; ftp 192.168.1.253&lt;br&gt;
+Connected to 192.168.1.253.&lt;br&gt;
+220 3Com 3CDaemon FTP Server Version 2.0&lt;br&gt;
+Name (192.168.1.253:root): admin&lt;br&gt;
+331 User name ok, need password&lt;br&gt;
+Password:&lt;br&gt;
+230 User logged in&lt;br&gt;
+Remote system type is UNIX.&lt;br&gt;
+Using binary mode to transfer files.&lt;br&gt;
+ftp&amp;gt; bin&lt;br&gt;
+200 Type set to I.&lt;br&gt;
+ftp&amp;gt; lcd /var/tmp&lt;br&gt;
+Local directory now /cf/var/tmp&lt;br&gt;
+ftp&amp;gt; get junos-srxsme-12.3X48-D101-domestic.tgz&lt;br&gt;
+local: junos-srxsme-12.3X48-D101-domestic.tgz remote: junos-srxsme-12.3X48-D101-domestic.tgz&lt;br&gt;
+200 PORT command successful.&lt;br&gt;
+150 File status OK ; about to open data connection&lt;br&gt;
+100% |**************************************************| 176 MB 00:00 ETA&lt;br&gt;
+226 Closing data connection; File transfer successful.&lt;br&gt;
+184670919 bytes received in 73.91 seconds (2.38 MB/s)&lt;br&gt;
+ftp&amp;gt; !ls&lt;br&gt;
+cleanup-pkgs.log krt_gencfg_filter.txt&lt;br&gt;
+eedebug_bin_file pics&lt;br&gt;
+gksdchk.log policy_status&lt;br&gt;
+gres-tp rtsdb&lt;br&gt;
+idp_license_info sec-download&lt;br&gt;
+install spu_kmd_init&lt;br&gt;
+junos-srxsme-12.3X48-D101-domestic.tgz vi.recover&lt;br&gt;
+kmdchk.log vpn_tunnel_orig.id&lt;br&gt;
+ftp&amp;gt; !ls -l&lt;br&gt;
+total 360884&lt;br&gt;
+-rw-r--r-- 1 root wheel 3871 Jul 27 14:35 cleanup-pkgs.log&lt;br&gt;
+-rw-r--r-- 1 root wheel 0 Jul 27 14:34 eedebug_bin_file&lt;br&gt;
+-rw-r--r-- 1 root wheel 34 Jul 27 14:34 gksdchk.log&lt;br&gt;
+drwxr-xr-x 2 root wheel 512 Oct 21 2015 gres-tp&lt;br&gt;
+-rw-r--r-- 1 root wheel 4 Jul 27 14:36 idp_license_info&lt;br&gt;
+drwxrwxrwx 2 root wheel 512 Oct 21 2015 install&lt;br&gt;
+-rw-r--r-- 1 root wheel 184670919 Jul 27 07:42 junos-srxsme-12.3X48-D101-domestic.tgz&lt;br&gt;
+-rw-r--r-- 1 root wheel 33 Jul 27 14:40 kmdchk.log&lt;br&gt;
+-rw-r--r-- 1 root wheel 155 Jul 27 14:36 krt_gencfg_filter.txt&lt;br&gt;
+drwxrwxrwx 2 root wheel 512 Oct 21 2015 pics&lt;br&gt;
+-rw-r--r-- 1 root wheel 30 Jul 27 14:40 policy_status&lt;br&gt;
+drwxr-xr-x 2 root wheel 512 Oct 21 2015 rtsdb&lt;br&gt;
+drwxr-xr-x 3 root wheel 512 Oct 21 2015 sec-download&lt;br&gt;
+-rw-r--r-- 1 root wheel 0 Oct 21 2015 spu_kmd_init&lt;br&gt;
+drwxrwxrwt 2 root wheel 512 Oct 21 2015 vi.recover&lt;br&gt;
+-rw-r--r-- 1 root wheel 0 Jul 27 14:40 vpn_tunnel_orig.id&lt;br&gt;
+ftp&amp;gt; bye&lt;br&gt;
+221 Service closing control connection&lt;/p&gt;
+&lt;p&gt;root&amp;gt; request system software add no-copy /var/tmp/junos-srxsme-12.3X48-D101-domestic.tgz no-validate reboot&lt;/p&gt;
+&lt;p&gt;Formatting alternate root (/dev/da0s2a)...&lt;br&gt;
+/dev/da0s2a: 627.4MB (1284940 sectors) block size 16384, fragment size 2048&lt;br&gt;
+using 4 cylinder groups of 156.86MB, 10039 blks, 20096 inodes.&lt;br&gt;
+super-block backups (for fsck -b #) at:&lt;br&gt;
+32, 321280, 642528, 963776&lt;br&gt;
+Extracting /var/tmp/junos-srxsme-12.3X48-D101-domestic.tgz ...&lt;br&gt;
+Installing package &#39;/altroot/cf/packages/install-tmp/junos-12.3X48-D101-domestic&#39; ...&lt;br&gt;
+Verified junos-boot-srxsme-12.3X48-D101.tgz signed by PackageProductionSHA1RSA_2020&lt;br&gt;
+Verified junos-srxsme-12.3X48-D101-domestic signed by PackageProductionSHA1RSA_2020&lt;br&gt;
+JUNOS 12.3X48-D101 will become active at next reboot&lt;br&gt;
+Saving state for rollback ...&lt;br&gt;
+Rebooting ...&lt;br&gt;
+shutdown: [pid 2463]&lt;br&gt;
+Shutdown NOW!&lt;/p&gt;
+&lt;p&gt;*** FINAL System shutdown message from root@ ***&lt;br&gt;
+至此，升级完成，可以在&amp;gt;下show version查看版本&lt;/p&gt;
+">Juniper SRX Junos升级</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://th815.github.io/post/docker-he-kubernetes-cong-ting-guo-dao-lue-dong-gei-cheng-xu-yuan-de-xuan-feng-jiao-cheng/"" data-c="
