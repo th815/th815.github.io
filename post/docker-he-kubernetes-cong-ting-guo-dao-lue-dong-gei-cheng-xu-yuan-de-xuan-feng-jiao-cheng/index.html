@@ -9,7 +9,7 @@
 <meta name="description" content="记录成长点滴">
 <meta name="theme-color" content="#000">
 <title>Docker 和 Kubernetes 从听过到略懂：给程序员的旋风教程 | 田昊</title>
-<link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io/favicon.ico?v=1625558089317">
+<link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io/favicon.ico?v=1625560590273">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io/media/css/gemini.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io/media/fonts/font-awesome.css">
 <link
@@ -41,6 +41,16 @@
 
 
 
+
+<script>
+  var _hmt = _hmt || [];
+  (function () {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?d225218343212c8ba0c448fe4c8ac84d";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
 
 
 
@@ -208,7 +218,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">4</span>
+        <span class="site-item-stat-count">6</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -226,6 +236,13 @@
     </div>
   </div>
   
+    
+      <div class="sidebar-item">
+        <span class="site-item-rss">
+            <i class="fa fa-rss"></i>
+            <a href="https://th815.github.io/atom.xml" target="_blank">RSS</a>
+        </span>
+      </div>
     
   
   
@@ -967,7 +984,7 @@ LeanCloud 的大部分服务都运行在基于 Docker 的基础设施上，包�
   
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/th815/th815.github.io/media/live2d/css/live2d.css" />
 <div class="box-scale">
-  <div id="landlord" style="left: 5px;bottom: px;"
+  <div id="landlord" style="left: 1050px;bottom: px;"
     data-key="">
     <canvas id="live2d" width="500" height="560" class="live2d"></canvas>
     
@@ -1504,6 +1521,11 @@ LeanCloud 的大部分服务都运行在基于 Docker 的基础设施上，包�
 </script>
   
   
+  
+  <script src="https://player.lmih.cn/player/js/player.js" id="myhk" key="demo" m="1"></script>
+
+
+  
 </div>
 <script>
 
@@ -1919,6 +1941,135 @@ LeanCloud 的大部分服务都运行在基于 Docker 的基础设施上，包�
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://th815.github.io/post/19/"" data-c="
+          &lt;p&gt;&lt;strong&gt;一、需求及实现方式介绍：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;**需求：**现在各个软件版本更新迭代很快，在我们部署一套集群（比如：openstack）后，如果过一段时间想扩展集群时发现软件版本早已迭代更新，安装后导致和现有环境或多或少不兼容，比较麻烦，因此我们可以在集群搭建时就将所有的安装包下载到本地，使用本地仓库进行安装，可以保证软件版本不会发生变化。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;实现方式&lt;/strong&gt;：使用vftpd + createrepo + downloadonly 搭建本地yum 源。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;二、搭建&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1、安装createrepo&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;yum -y install createrep
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;2、创建镜像存放目录，最好能挂在一个单独的分区&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir /var/ftp/pub/Aliyun
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;3、安装vftpd&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;yum install vsftpd
+systemctl  start  vsftpd.service
+systemctl  enable  vsftpd.service
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;4、安装downloadonly 插件包&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# yum install yum-utils
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;5、下载镜像包&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;(1)、同步网上现有的镜像源：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;a、创建存储目录&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# mkdir -p /var/ftp/pub/Aliyun 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;b、 准备同步阿里云的源，base，updates，extras，epel, 确保/etc/yum.repos.d/ 下只有下面这两个repo&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;wget -O /etc/yum.repos.d/CentOS-epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;c、 开始同步下载包&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;reposync -p /var/ftp/pub/Aliyun 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210331112054830.png&#34; alt=&#34;image-20210331112054830&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210331103512003.png&#34; alt=&#34;image-20210331103512003&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;d、 建仓&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;createrepo -p /var/ftp/pub/Aliyun/base/Packages
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210331104619446.png&#34; alt=&#34;image-20210331104619446&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;createrepo -p /var/ftp/pub/Aliyun/extras/Packages
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;4&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210331105515951.png&#34; alt=&#34;image-20210331105515951&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;createrepo -p /var/ftp/pub/Aliyun/updates/Packages
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;5&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210331105620745.png&#34; alt=&#34;image-20210331105620745&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;createrepo -p /var/ftp/pub/Aliyun/epel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;6&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210331105742879.png&#34; alt=&#34;image-20210331105742879&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;e、crontab定时同步&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;crontab -e
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;1 2 * * * reposync -np /var/ftp/pub/Aliyun   #-np：只同步更新的部分
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;(2)、挂载ISO镜像&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;a、创建挂载目录&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir /var/ftp/pub/cdrom
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;b、挂载镜像&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mount -t iso9660 /dev/cdrom  /var/ftp/pub/cdrom
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;c、建仓&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;createrepo -p /var/ftp/pub/cdrom
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;6、生成镜像仓库，会在仓库目录下生成一个repodata 的目录&lt;/strong&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;createrepo -p /var/ftb/pub
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;三、客户端测试：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1、客户端修改yum 源&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt; cd /etc/yum.repos.d
+mkdir bak
+mv \*.repo bak
+vim CentOS-Media.repo　　
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[base]
+name = &amp;quot; CentOS-7 - Media&amp;quot;
+baseurl =ftp://172.16.200.200/pub    #局域网yum 源IP地址
+gpgcheck = 0
+enabled = 1
+[updates]
+name = &amp;quot; CentOS-7 - Media&amp;quot;
+baseurl = ftp://172.16.200.200/pub
+gpgcheck = 0
+enabled = 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;　　　　**# `yum repolist`**   # 客户端repo 列表查看
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;7&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210331110805553.png&#34; alt=&#34;image-20210331110805553&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;yum list all | grep nginx  #客户端查看软件列表 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;8&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210331110739812.png&#34; alt=&#34;image-20210331110739812&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;四、后期维护&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1、服务端&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;每次下载完镜像后，都需要更新yum仓库列表&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;createrepo --update -p /var/ftp/pub
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;9&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210331111124989.png&#34; alt=&#34;image-20210331111124989&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;2、客户端&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;yum clean all  #清除原有的yum信息
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;10&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210331111150808.png&#34; alt=&#34;image-20210331111150808&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+">Centos 7 局域网yum源搭建并同步互联网源</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://th815.github.io/post/17/"" data-c="
+          &lt;p&gt;1、创建目录 ****，把光盘挂载到新建的目录&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;mkdir /media/cdrom&lt;/li&gt;
+&lt;li&gt;mount -t auto /dev/sr0 /media/cdrom&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210326232204250.png&#34; alt=&#34;image-20210326232204250&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;2、设置开机自动挂载光盘到 &lt;strong&gt;/media/cdrom&lt;/strong&gt; 目录&lt;/p&gt;
+&lt;p&gt;vim /etc/fstab&lt;/p&gt;
+&lt;p&gt;在最后添加一行：&lt;/p&gt;
+&lt;p&gt;/dev/sr0  /media/cdrom  iso9660  defaults  0 0&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210326232231210.png&#34; alt=&#34;image-20210326232231210&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;3、修改&lt;strong&gt;yum&lt;/strong&gt;源配置文件&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;3&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210326232247801.png&#34; alt=&#34;image-20210326232247801&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;4&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210326232320918.png&#34; alt=&#34;image-20210326232320918&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;修改 ：&lt;/p&gt;
+&lt;p&gt;baseurl=file:///media/cdrom/&lt;/p&gt;
+&lt;p&gt;enabled=1&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;5&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210326232341746.png&#34; alt=&#34;image-20210326232341746&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;五、验证yum&lt;/strong&gt;&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;6&#34;&gt;&lt;img src=&#34;https://gitee.com/th815/images/raw/master/blog/image-20210326232411561.png&#34; alt=&#34;image-20210326232411561&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;本地yum 挂载完成&lt;/p&gt;
+">Centos6.7 挂载本地yum源</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://th815.github.io/post/juniper-srx-junos-sheng-ji/"" data-c="

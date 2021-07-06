@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://th815.github.io</id>
     <title>田昊</title>
-    <updated>2021-07-06T07:54:51.614Z</updated>
+    <updated>2021-07-06T08:37:51.892Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://th815.github.io"/>
     <link rel="self" href="https://th815.github.io/atom.xml"/>
@@ -10,6 +10,141 @@
     <logo>https://th815.github.io/images/avatar.png</logo>
     <icon>https://th815.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 田昊</rights>
+    <entry>
+        <title type="html"><![CDATA[Centos 7 局域网yum源搭建并同步互联网源]]></title>
+        <id>https://th815.github.io/post/19/</id>
+        <link href="https://th815.github.io/post/19/">
+        </link>
+        <updated>2021-03-31T08:35:09.000Z</updated>
+        <content type="html"><![CDATA[<p><strong>一、需求及实现方式介绍：</strong></p>
+<p>**需求：**现在各个软件版本更新迭代很快，在我们部署一套集群（比如：openstack）后，如果过一段时间想扩展集群时发现软件版本早已迭代更新，安装后导致和现有环境或多或少不兼容，比较麻烦，因此我们可以在集群搭建时就将所有的安装包下载到本地，使用本地仓库进行安装，可以保证软件版本不会发生变化。</p>
+<p><strong>实现方式</strong>：使用vftpd + createrepo + downloadonly 搭建本地yum 源。</p>
+<p><strong>二、搭建</strong></p>
+<p><strong>1、安装createrepo</strong></p>
+<pre><code class="language-bash">yum -y install createrep
+</code></pre>
+<p><strong>2、创建镜像存放目录，最好能挂在一个单独的分区</strong></p>
+<pre><code class="language-bash">mkdir /var/ftp/pub/Aliyun
+</code></pre>
+<p><strong>3、安装vftpd</strong></p>
+<pre><code class="language-bash">yum install vsftpd
+systemctl  start  vsftpd.service
+systemctl  enable  vsftpd.service
+</code></pre>
+<p><strong>4、安装downloadonly 插件包</strong></p>
+<pre><code class="language-bash"># yum install yum-utils
+</code></pre>
+<p><strong>5、下载镜像包</strong></p>
+<p><strong>(1)、同步网上现有的镜像源：</strong></p>
+<p><strong>a、创建存储目录</strong></p>
+<pre><code class="language-bash"># mkdir -p /var/ftp/pub/Aliyun 
+</code></pre>
+<p><strong>b、 准备同步阿里云的源，base，updates，extras，epel, 确保/etc/yum.repos.d/ 下只有下面这两个repo</strong></p>
+<pre><code class="language-bash">wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+</code></pre>
+<pre><code class="language-bash">wget -O /etc/yum.repos.d/CentOS-epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+</code></pre>
+<p><strong>c、 开始同步下载包</strong></p>
+<pre><code class="language-bash">reposync -p /var/ftp/pub/Aliyun 
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210331112054830.png" alt="image-20210331112054830" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210331103512003.png" alt="image-20210331103512003" loading="lazy"></figure>
+<p><strong>d、 建仓</strong></p>
+<pre><code class="language-bash">createrepo -p /var/ftp/pub/Aliyun/base/Packages
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210331104619446.png" alt="image-20210331104619446" loading="lazy"></figure>
+<pre><code class="language-bash">createrepo -p /var/ftp/pub/Aliyun/extras/Packages
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210331105515951.png" alt="image-20210331105515951" loading="lazy"></figure>
+<pre><code class="language-bash">createrepo -p /var/ftp/pub/Aliyun/updates/Packages
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210331105620745.png" alt="image-20210331105620745" loading="lazy"></figure>
+<pre><code class="language-bash">createrepo -p /var/ftp/pub/Aliyun/epel
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210331105742879.png" alt="image-20210331105742879" loading="lazy"></figure>
+<p><strong>e、crontab定时同步</strong></p>
+<pre><code class="language-bash">crontab -e
+</code></pre>
+<pre><code class="language-bash">1 2 * * * reposync -np /var/ftp/pub/Aliyun   #-np：只同步更新的部分
+</code></pre>
+<p><strong>(2)、挂载ISO镜像</strong></p>
+<p><strong>a、创建挂载目录</strong></p>
+<pre><code class="language-bash">mkdir /var/ftp/pub/cdrom
+</code></pre>
+<p><strong>b、挂载镜像</strong></p>
+<pre><code class="language-bash">mount -t iso9660 /dev/cdrom  /var/ftp/pub/cdrom
+</code></pre>
+<p><strong>c、建仓</strong></p>
+<pre><code class="language-bash">createrepo -p /var/ftp/pub/cdrom
+</code></pre>
+<p><strong>6、生成镜像仓库，会在仓库目录下生成一个repodata 的目录</strong>。</p>
+<pre><code class="language-bash">createrepo -p /var/ftb/pub
+</code></pre>
+<p><strong>三、客户端测试：</strong></p>
+<p><strong>1、客户端修改yum 源</strong></p>
+<pre><code class="language-bash"> cd /etc/yum.repos.d
+mkdir bak
+mv \*.repo bak
+vim CentOS-Media.repo　　
+</code></pre>
+<pre><code class="language-bash">[base]
+name = &quot; CentOS-7 - Media&quot;
+baseurl =ftp://172.16.200.200/pub    #局域网yum 源IP地址
+gpgcheck = 0
+enabled = 1
+[updates]
+name = &quot; CentOS-7 - Media&quot;
+baseurl = ftp://172.16.200.200/pub
+gpgcheck = 0
+enabled = 1
+</code></pre>
+<pre><code>　　　　**# `yum repolist`**   # 客户端repo 列表查看
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210331110805553.png" alt="image-20210331110805553" loading="lazy"></figure>
+<pre><code class="language-bash">yum list all | grep nginx  #客户端查看软件列表 
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210331110739812.png" alt="image-20210331110739812" loading="lazy"></figure>
+<p><strong>四、后期维护</strong></p>
+<p><strong>1、服务端</strong></p>
+<p>每次下载完镜像后，都需要更新yum仓库列表</p>
+<pre><code class="language-bash">createrepo --update -p /var/ftp/pub
+</code></pre>
+<figure data-type="image" tabindex="9"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210331111124989.png" alt="image-20210331111124989" loading="lazy"></figure>
+<p><strong>2、客户端</strong></p>
+<pre><code class="language-bash">yum clean all  #清除原有的yum信息
+</code></pre>
+<figure data-type="image" tabindex="10"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210331111150808.png" alt="image-20210331111150808" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Centos6.7 挂载本地yum源]]></title>
+        <id>https://th815.github.io/post/17/</id>
+        <link href="https://th815.github.io/post/17/">
+        </link>
+        <updated>2021-03-26T08:32:51.000Z</updated>
+        <content type="html"><![CDATA[<p>1、创建目录 ****，把光盘挂载到新建的目录</p>
+<ul>
+<li>mkdir /media/cdrom</li>
+<li>mount -t auto /dev/sr0 /media/cdrom</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210326232204250.png" alt="image-20210326232204250" loading="lazy"></figure>
+<p>2、设置开机自动挂载光盘到 <strong>/media/cdrom</strong> 目录</p>
+<p>vim /etc/fstab</p>
+<p>在最后添加一行：</p>
+<p>/dev/sr0  /media/cdrom  iso9660  defaults  0 0</p>
+<figure data-type="image" tabindex="2"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210326232231210.png" alt="image-20210326232231210" loading="lazy"></figure>
+<p>3、修改<strong>yum</strong>源配置文件</p>
+<figure data-type="image" tabindex="3"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210326232247801.png" alt="image-20210326232247801" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210326232320918.png" alt="image-20210326232320918" loading="lazy"></figure>
+<p>修改 ：</p>
+<p>baseurl=file:///media/cdrom/</p>
+<p>enabled=1</p>
+<figure data-type="image" tabindex="5"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210326232341746.png" alt="image-20210326232341746" loading="lazy"></figure>
+<p><strong>五、验证yum</strong></p>
+<figure data-type="image" tabindex="6"><img src="https://gitee.com/th815/images/raw/master/blog/image-20210326232411561.png" alt="image-20210326232411561" loading="lazy"></figure>
+<p>本地yum 挂载完成</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Juniper SRX Junos升级]]></title>
         <id>https://th815.github.io/post/juniper-srx-junos-sheng-ji/</id>
